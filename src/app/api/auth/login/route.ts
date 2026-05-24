@@ -31,11 +31,7 @@ export async function POST(request: Request) {
 
     const { email, password, turnstileToken } = parsedData.data;
 
-    const isDemoToken = turnstileToken === "demo-token";
-
-    const isHuman = isDemoToken
-      ? true
-      : await verifyTurnstileToken(turnstileToken);
+    const isHuman = await verifyTurnstileToken(turnstileToken);
 
     if (!isHuman) {
       return NextResponse.json(
