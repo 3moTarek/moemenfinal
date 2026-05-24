@@ -1,14 +1,10 @@
 import Link from "next/link";
 
-import { getCurrentUser } from "@/lib/auth";
-
 export default async function ShopLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getCurrentUser();
-
   return (
     <div className="min-h-screen bg-[#f7f1ea] text-[#3b2416]">
       <header className="border-b border-[#d8c3ad] bg-white">
@@ -30,15 +26,6 @@ export default async function ShopLayout({
             >
               Shop
             </Link>
-
-            {user?.role === "admin" && (
-              <Link
-                href="/shop/admin"
-                className="text-sm font-medium text-[#6f4e37] transition hover:text-[#3b2416]"
-              >
-                Admin
-              </Link>
-            )}
 
             <form action="/api/auth/logout" method="POST">
               <button

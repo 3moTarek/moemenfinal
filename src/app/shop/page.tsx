@@ -8,6 +8,8 @@ export default async function ShopPage() {
   const user = await getCurrentUser();
   const products: Product[] = getProducts();
 
+  const isAdmin = user?.role === "admin";
+
   return (
     <main className="min-h-screen bg-[#f7f1ea] px-6 py-10 text-[#3b2416]">
       <section className="mx-auto max-w-6xl">
@@ -22,13 +24,21 @@ export default async function ShopPage() {
             <p className="mt-2 text-sm text-[#6f4e37]">
               Logged in as {user?.email} — Role: {user?.role}
             </p>
+
+            {!isAdmin && (
+              <p className="mt-3 rounded-xl bg-[#f7f1ea] px-4 py-3 text-sm text-[#6f4e37]">
+                You can see product management buttons, but only admin can use
+                them.
+              </p>
+            )}
           </div>
 
-          {user?.role === "admin" && (
-            <button className="rounded-xl bg-[#3b2416] px-5 py-3 text-sm font-semibold text-white">
-              Add Product
-            </button>
-          )}
+          <button
+            disabled={!isAdmin}
+            className="rounded-xl bg-[#3b2416] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#6f4e37] disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Add Product
+          </button>
         </div>
 
         <div className="mt-8 grid gap-6 md:grid-cols-3">
@@ -51,29 +61,29 @@ export default async function ShopPage() {
                   {product.category}
                 </p>
 
-                <h2 className="mt-2 text-xl font-bold">
-                  {product.name}
-                </h2>
+                <h2 className="mt-2 text-xl font-bold">{product.name}</h2>
 
                 <p className="mt-2 text-sm text-[#6f4e37]">
                   {product.description}
                 </p>
 
-                <p className="mt-4 text-lg font-bold">
-                  ${product.price}
-                </p>
+                <p className="mt-4 text-lg font-bold">${product.price}</p>
 
-                {user?.role === "admin" && (
-                  <div className="mt-5 flex gap-3">
-                    <button className="flex-1 rounded-xl border border-[#8b5e3c] px-4 py-2 text-sm font-semibold">
-                      Edit
-                    </button>
+                <div className="mt-5 flex gap-3">
+                  <button
+                    disabled={!isAdmin}
+                    className="flex-1 rounded-xl border border-[#8b5e3c] px-4 py-2 text-sm font-semibold transition hover:bg-[#f7f1ea] disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    Edit
+                  </button>
 
-                    <button className="flex-1 rounded-xl bg-[#3b2416] px-4 py-2 text-sm font-semibold text-white">
-                      Delete
-                    </button>
-                  </div>
-                )}
+                  <button
+                    disabled={!isAdmin}
+                    className="flex-1 rounded-xl bg-[#3b2416] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#6f4e37] disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </article>
           ))}
