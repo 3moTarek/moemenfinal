@@ -1,15 +1,18 @@
 "use client";
 
+import { Turnstile } from "@marsidev/react-turnstile";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
 
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [turnstileToken, setTurnstileToken] = useState("demo-token");
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,6 +21,12 @@ export default function LoginPage() {
     event.preventDefault();
 
     setError("");
+
+    if (!turnstileToken) {
+      setError("Please complete human verification.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -61,7 +70,7 @@ export default function LoginPage() {
           <h1 className="mt-4 text-3xl font-bold">Login</h1>
 
           <p className="mt-2 text-sm text-[#6f4e37]">
-            Sign in with email, password, human verification, and OTP.
+            Sign in with email, password, Cloudflare verification, and OTP.
           </p>
 
           <form onSubmit={handleLogin} className="mt-8 space-y-5">
@@ -91,17 +100,28 @@ export default function LoginPage() {
 
             <div className="rounded-2xl border border-[#d8c3ad] bg-[#f7f1ea] p-4">
               <p className="text-sm font-semibold">Human verification</p>
-              <p className="mt-1 text-xs text-[#6f4e37]">
-                Cloudflare Turnstile widget will be connected here.
-              </p>
 
-              <button
-                type="button"
-                onClick={() => setTurnstileToken("demo-token")}
-                className="mt-4 rounded-xl bg-[#3b2416] px-4 py-2 text-sm text-white"
-              >
-                I am human
-              </button>
+              <div className="mt-4">
+                {siteKey ? (
+                  <Turnstile
+                    siteKey={siteKey}
+                    onSuccess={(token) => setTurnstileToken(token)}
+                    onExpire={() => setTurnstileToken("")}
+                    onError={() => {
+                      setTurnstileToken("");
+                      setError("Human verification failed.");
+                    }}
+                    options={{
+                      theme: "light",
+                      size: "flexible",
+                    }}
+                  />
+                ) : (
+                  <p className="text-sm text-red-600">
+                    Missing NEXT_PUBLIC_TURNSTILE_SITE_KEY.
+                  </p>
+                )}
+              </div>
             </div>
 
             {error && (
