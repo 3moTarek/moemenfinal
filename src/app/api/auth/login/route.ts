@@ -93,7 +93,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        message: "Something went wrong.",
+        message: "login failed due to an internal error.",
       },
       { status: 500 }
     );
