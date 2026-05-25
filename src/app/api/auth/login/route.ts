@@ -74,10 +74,28 @@ export async function POST(request: Request) {
 
     saveOtp(user.email, otp);
 
+    console.log("OTP generated for:", user.email);
     console.log("DEV OTP:", otp);
 
-    if (process.env.EMAIL_APP_PASSWORD) {
-      await sendOtpEmail(user.email, otp);
+    try {
+      if (process.env.EMAIL_APP_PASSWORD) {
+        await sendOtpEmail(user.email, otp);
+      } else {
+        console.log("EMAIL_APP_PASSWORD is missing. OTP shown in terminal.");
+      }
+    } catch (emailError) {
+      console.error("Email sending error:", emailError);
+
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            emailError instanceof Error
+              ? `Email failed: ${emailError.message}`
+              : "Email failed.",
+        },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
@@ -93,7 +111,10 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        message: "login failed due to an internal error.",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Login failed due to an internal error.",
       },
       { status: 500 }
     );
