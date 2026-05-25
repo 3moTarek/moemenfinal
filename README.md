@@ -1,36 +1,336 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+cat > README.md << 'EOF'
+# Brown Shop Authentication System
 
-## Getting Started
+## Overview
 
-First, run the development server:
+Brown Shop is a secure full-stack shopping platform built using Next.js App Router.
 
-```bash
+The project demonstrates:
+
+- Authentication
+- Authorization
+- JWT security
+- OTP verification
+- Cloudflare Turnstile verification
+- Protected routes
+- Admin/User roles
+- Product CRUD system
+- CI/CD workflow
+- Vercel deployment
+
+The application uses a brown and white luxury UI design and simulates a real production-ready authentication architecture without a database.
+
+---
+
+# Technologies Used
+
+## Frontend
+
+- Next.js 15
+- React
+- TypeScript
+- Tailwind CSS
+
+## Backend
+
+- Next.js API Routes
+- JWT Authentication
+- bcryptjs
+- Nodemailer
+- Cloudflare Turnstile
+
+## Deployment
+
+- GitHub
+- GitHub Actions CI
+- Vercel
+
+---
+
+# Features
+
+## Authentication
+
+- Email/password login
+- bcrypt password hashing
+- JWT token authentication
+- HTTP-only authentication cookies
+- OTP verification system
+- Gmail OTP email sending
+- Cloudflare Turnstile human verification
+
+---
+
+## Authorization
+
+Two roles:
+
+### Admin
+
+Can:
+- Add products
+- Edit products
+- Delete products
+
+### User
+
+Can:
+- Login
+- View products
+
+Users can see management buttons but cannot use them.
+
+---
+
+# Security Features
+
+- JWT verification
+- Protected middleware routes
+- HTTP-only cookies
+- Turnstile verification
+- OTP expiration system
+- Server-side authorization
+- bcrypt password hashing
+
+---
+
+# Project Structure
+
+src/
+│
+├── app/
+│   ├── api/
+│   │   ├── auth/
+│   │   └── products/
+│   │
+│   ├── login/
+│   ├── otp/
+│   └── shop/
+│
+├── components/
+│   └── products/
+│
+├── lib/
+│
+├── types/
+│
+└── middleware.ts
+
+---
+
+# Authentication Flow
+
+User opens /login
+↓
+Cloudflare Turnstile verification
+↓
+Email/password validation
+↓
+OTP generated
+↓
+OTP sent by Gmail
+↓
+User enters OTP
+↓
+JWT token created
+↓
+JWT stored in HTTP-only cookie
+↓
+Middleware protects /shop
+↓
+User enters system
+
+---
+
+# Product Authorization Flow
+
+Admin login
+↓
+Buttons enabled
+↓
+Can create/update/delete
+
+User login
+↓
+Buttons visible but disabled
+↓
+API still blocks unauthorized actions
+
+---
+
+# Middleware Flow
+
+User requests /shop
+↓
+middleware.ts runs first
+↓
+JWT cookie checked
+↓
+JWT verified
+↓
+Allow or redirect
+
+---
+
+# Environment Variables
+
+Create .env.local
+
+EMAIL_USER=
+EMAIL_APP_PASSWORD=
+
+JWT_SECRET=
+
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=
+
+---
+
+# Installation
+
+## Clone repository
+
+git clone <repository-url>
+
+---
+
+## Install dependencies
+
+npm install
+
+---
+
+## Run development server
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Build Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Run lint
 
-## Learn More
+npm run lint
 
-To learn more about Next.js, take a look at the following resources:
+## Production build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+npm run build
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+# CI/CD Workflow
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The project uses GitHub Actions CI pipeline.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Pipeline steps:
+
+git push
+↓
+GitHub Actions
+↓
+npm ci
+↓
+npm run lint
+↓
+npm run build
+↓
+Pass or fail
+
+Production deployment is handled automatically by Vercel.
+
+---
+
+# Deployment
+
+The application is deployed using Vercel.
+
+Deployment flow:
+
+Push to GitHub
+↓
+Vercel detects changes
+↓
+Automatic deployment
+↓
+Production website updates
+
+---
+
+# Cloudflare Turnstile
+
+Cloudflare Turnstile is used to verify human users before login.
+
+Flow:
+
+User completes widget
+↓
+Frontend receives token
+↓
+Backend verifies token with Cloudflare
+↓
+Login allowed or denied
+
+---
+
+# OTP System
+
+The OTP system uses:
+
+- Nodemailer
+- Gmail App Password
+- In-memory OTP storage
+
+Flow:
+
+User logs in
+↓
+OTP generated
+↓
+OTP emailed
+↓
+OTP verified
+↓
+JWT created
+
+---
+
+# Git Workflow
+
+## Developer branch
+
+Used for:
+- development
+- testing
+- feature work
+
+## Main branch
+
+Used for:
+- production
+- deployment
+
+---
+
+# Future Improvements
+
+- Database integration
+- Persistent product storage
+- Refresh tokens
+- Better dashboard UI
+- Toast notifications
+- Product image uploads
+- User registration
+- Password reset system
+
+---
+
+# Production URL
+
+https://moemenfinal.vercel.app
+
+---
+
+# Author
+
+Moemen Hafez
+EOF
